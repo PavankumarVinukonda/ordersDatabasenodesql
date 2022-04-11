@@ -71,25 +71,19 @@ app.post('/insertdata',  (req, res) => {
 })
 
 
-// function to get the latest 7 orders
-
-function getLatestSevenOrders(){
+// api to get data
+app.get('/latestOreders',  (req, res) => {
     const sql = `SELECT * FROM orders ORDER BY orderId DESC LIMIT 7;`
 
     database.query(sql, function(err, result) {
         if (err) {
-            console.log('An error occurred while getting data' + err.message)
+            res.send('An error occurred while getting data' + err.message)
         }else {
-            console.log(result)
+            res.send(result)
         }
     })
-}
-
-
-// api to get data
-app.get('/latestOreders',  (req, res) => {
-    getLatestSevenOrders()
 })
+
 
 
 app.listen(process.env.PORT || 3004, () => console.log('Server is running at localhost:3004'))
