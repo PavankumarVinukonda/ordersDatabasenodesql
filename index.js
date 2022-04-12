@@ -5,7 +5,16 @@ const {format} = require('date-fns')
 
 app.use(express.json());
 
-let dt = format(new Date(), 'yyyy-MM-dd hh-mm-ss')
+let dt = format(new Date(), 'yyyy-MM-dd')
+let date = new Date()
+let old = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate() - 7
+  );
+
+let oldDate = format(old, 'yyyy-MM-dd')
+ 
 let db = "evstudios"
 
 const database = mysql.createConnection({
@@ -43,7 +52,7 @@ app.get('/createDb', async (req, res) => {
 //  create table
 
 app.get('/createTable' ,  (req, res) => {
-    let sql =  `CREATE TABLE  orders(orderId int NOT NULL AUTO_INCREMENT PRIMARY KEY,title VARCHAR(200),description VARCHAR(265), createdAt DATETIME);`
+    let sql =  `CREATE TABLE  orders(orderId int NOT NULL AUTO_INCREMENT PRIMARY KEY,title VARCHAR(200),description VARCHAR(265), createdAt DATE);`
     database.query(sql,(err) => {
         if (err) {
             res.send('ann error occured while creatin table: ' + err.message)
@@ -71,10 +80,13 @@ app.post('/insertdata',  (req, res) => {
 })
 
 
+
+
+
 // api to get data
 app.get('/latestOreders',  (req, res) => {
-    const sql = `SELECT * FROM orders ORDER BY orderId DESC LIMIT 7;`
-
+    
+    const sql = `SELECT * FROM orders where createdAt between '${oldDate}' and '${dt}' ;` 
     database.query(sql, function(err, result) {
         if (err) {
             res.send('An error occurred while getting data' + err.message)
@@ -83,7 +95,6 @@ app.get('/latestOreders',  (req, res) => {
         }
     })
 })
-
 
 
 app.listen(process.env.PORT || 3004, () => console.log('Server is running at localhost:3004'))
