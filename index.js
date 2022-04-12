@@ -5,12 +5,12 @@ const {format} = require('date-fns')
 
 app.use(express.json());
 
-let dt = format(new Date(), 'yyyy-MM-dd')
+let dt = format(new Date(), 'yyyy-MM-dd') // enter the date upto date
 let date = new Date()
 let old = new Date(
     date.getFullYear(),
     date.getMonth(),
-    date.getDate() - 7
+    date.getDate() - 7 // change the noumber of days before here
   );
 
 let oldDate = format(old, 'yyyy-MM-dd')
